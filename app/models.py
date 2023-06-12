@@ -14,6 +14,16 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(64), unique=True)
     IDno = db.Column(db.String(64), unique=True)
 
+    def __init__(self, username, email, password, IDno, role):
+        self.username = username
+        self.email = email
+        self.password = generate_password_hash(password)
+        self.IDno = IDno
+        self.role = role
+
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
