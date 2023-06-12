@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, session, flash
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, ResetEmail
 from . import main
 from app import db, login_manager
 from app.models import User
@@ -54,7 +54,7 @@ def register():
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
 
-
-
-
-
+@main.route('/reset', methods=['GET', 'POST'])
+def resetEmail():
+    form = ResetEmail()
+    return render_template('resetEmail.html', form=form)

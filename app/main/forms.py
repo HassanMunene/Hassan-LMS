@@ -16,3 +16,12 @@ class RegisterForm(FlaskForm):
     password2 = PasswordField('Confirm password', validators=[DataRequired()])
     submit = SubmitField('Register')
 
+class ResetEmail2(FlaskForm):
+    username = StringField('New username', validators=[DataRequired()])
+    password = PasswordField('New password', validators=[DataRequired(), EqualTo('password2', message='passwords must match')])
+    password2 = PasswordField('Confirm password', validators=[DataRequired()])
+    submit = SubmitField('Reset')
+
+class ResetEmail(FlaskForm):
+    email = StringField('Enter your email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Reset')
