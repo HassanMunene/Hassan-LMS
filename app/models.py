@@ -1,3 +1,4 @@
+
 from . import db
 
 class User(db.Model):
@@ -8,5 +9,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(64), unique=True, index=True)
-    regno= db.Column(db.String(64), unique=True)
+    role = db.Column(db.String(64))
+    password = db.Column(db.String(64), unique=True)
+    IDno = db.Column(db.String(64), unique=True)
 

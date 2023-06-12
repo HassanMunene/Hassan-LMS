@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, session
+from flask import Flask, render_template, redirect, url_for, session, flash
 from .forms import LoginForm
 from . import main
 from app import db
@@ -16,4 +16,14 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            if user.role=="admin" or user.role=="librarian":
+                flash("Login successful")
+                return redirect(url_for('main.index'))
+            else:
+                flash("Invalid User")
+        else:
+            flash("Invalide credentials")
+        return redirect(url_for('main.login'))
+    return render_template('login.html', form=form)
 

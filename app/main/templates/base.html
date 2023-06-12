@@ -23,7 +23,7 @@
 				{% if logged_in %}
 				<li><a class="nav-link" href="/">Logout</a></li>
 				{% else %}
-				<li><a class="nav-link" href="/">Login</a></li>
+				<li><a class="nav-link" href="{{ url_for('main.login') }}">Login</a></li>
 				{% endif %}
 				<li><a class="nav-link" href="/">Contacts</a></li>
 				<li><a class="nav-link" href="/">About</a></li>
