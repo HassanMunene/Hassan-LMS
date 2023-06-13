@@ -20,13 +20,13 @@
 				<li><a href="{{ url_for('main.index') }}">Home</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				{% if logged_in %}
-				<li><a class="nav-link" href="/">Logout</a></li>
+				{% if current_user.is_authenticated %}
+				<li><a href="{{ url_for('main.dashboard') }}">Profile</a></li>
+				<li><a href="{{ url_for('main.logout') }}">Logout</a></li>
+				<li><a href="/">Change Password</a></li>
 				{% else %}
-				<li><a class="nav-link" href="{{ url_for('main.login') }}">Login</a></li>
+				<li><a href="{{ url_for('main.login') }}">Login</a></li>
 				{% endif %}
-				<li><a class="nav-link" href="/">Contacts</a></li>
-				<li><a class="nav-link" href="/">About</a></li>
 			</ul>
 		</div>
 	</div>
