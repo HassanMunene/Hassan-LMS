@@ -1,10 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, session, flash
+from flask import Flask, render_template, redirect, url_for, session, flash, current_app
 from .forms import LoginForm, RegisterForm, ResetEmail, ResetEmail2
 from . import main
 from app import db, login_manager
 from app.models import User
 from flask_login import login_user
 from ..emails import send_email
+from itsdangerous import URLSafeTimedSerializer
+from werkzeug.security import generate_password_hash
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -27,6 +29,7 @@ def login():
             login_user(user)
             if user.role == 'admin':
                 flash("logged in as admin")
+                return redirect(url_for('main.admin'))
             elif user.role == 'librarian':
                 flash("logged in as librarian")
             else:
@@ -79,9 +82,28 @@ def reset(token):
     on the recieved mail
     """
     form = ResetEmail2()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+        data = s.loads(token)
+        user = User.query.filter_by(email=data).first()
+        if not user:
+            flash('The link is Invalid or has Expired')
+            return redirect(url_for('main.reset'))
+        user.username = username
+        user.password = generate_password_hash(password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Password and username updated successfully')
+        return redirect(url_for('main.login'))
+
     return render_template('resetEmail2.html', form=form)
 
-
-
-
-
+@main.route('/admin', methods=['GET', 'POST'])
+def admin():
+    """
+    This will define the route that
+    a user takes if their role is admin when logging in
+    """
+    return render_template('dashboard.html')
