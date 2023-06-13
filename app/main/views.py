@@ -3,17 +3,14 @@ from .forms import LoginForm, RegisterForm, ResetEmail, ResetEmail2
 from . import main
 from app import db, login_manager
 from app.models import User
-from flask_login import login_user
+from flask_login import login_user, logout_user, current_user, login_required
 from ..emails import send_email
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    if 'logged_in' in session:
-        return render_template('index.html', logged_in=True)
-    else:
-        return render_template('index.html', logged_in=False)
+        return render_template('index.html')
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -29,15 +26,24 @@ def login():
             login_user(user)
             if user.role == 'admin':
                 flash("logged in as admin")
-                return redirect(url_for('main.admin'))
+                return redirect(url_for('main.dashboard'))
             elif user.role == 'librarian':
+                return redirect(url_for('main.dashboard'))
                 flash("logged in as librarian")
             else:
+                return redirect(url_for('main.dashboard'))
                 flash("logged in as student")
             return redirect(url_for('main.index'))
         else:
             flash('Invalid username or password')
     return render_template('login.html', form=form)
+
+@main.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('main.index'))
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -100,8 +106,8 @@ def reset(token):
 
     return render_template('resetEmail2.html', form=form)
 
-@main.route('/admin', methods=['GET', 'POST'])
-def admin():
+@main.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
     """
     This will define the route that
     a user takes if their role is admin when logging in
