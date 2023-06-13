@@ -1,9 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, session, flash
-from .forms import LoginForm, RegisterForm, ResetEmail
+from .forms import LoginForm, RegisterForm, ResetEmail, ResetEmail2
 from . import main
 from app import db, login_manager
 from app.models import User
 from flask_login import login_user
+from ..emails import send_email
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -56,5 +57,31 @@ def register():
 
 @main.route('/reset', methods=['GET', 'POST'])
 def resetEmail():
+    """
+    this function will handle sending of email
+    after the user has entered their email
+    """
     form = ResetEmail()
+    if form.validate_on_submit():
+        email = form.email.data
+        user = User.query.filter_by(email=email).first()
+        token = user.generate_signed_token()
+        send_email(user.email, 'Reset Your Email', 'email/resetEmail', user=user, token=token)
+        flash('A reset email has been sent to you by email')
+        return redirect(url_for('main.index'))
     return render_template('resetEmail.html', form=form)
+
+@main.route('/resetEmail/<token>', methods=['GET', 'POST'])
+def reset(token):
+    """
+    this will handle the logic that
+    happens when the user clicks the link
+    on the recieved mail
+    """
+    form = ResetEmail2()
+    return render_template('resetEmail2.html', form=form)
+
+
+
+
+
