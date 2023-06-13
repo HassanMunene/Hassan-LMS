@@ -9,6 +9,13 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS =False
     FLASKY_ADMIN = 'devtools14347@outlook.com'
     FLASKY_LIBRARIAN = 'devtools214347@outlook.com'
+    MAIL_SERVER = 'smtp.office365.com'
+    MAIL_DEFAULT_SENDER = 'devtools14347@outlook.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_DEBUG = False
+    MAIL_USERNAME = 'devtools14347@outlook.com'
+    MAIL_PASSWORD = 'Munene14347'
 
     @staticmethod
     def init_app(app):
