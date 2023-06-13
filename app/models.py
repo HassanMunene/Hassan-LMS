@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password, password)
 
     def generate_signed_token(self):
-        s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'], expires_in=3600)
+        s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
         token = s.dumps(self.email)
         return token
 
@@ -36,7 +36,8 @@ class User(db.Model, UserMixin):
             data = s.loads(token)
         except:
             return False
-        return True
+        if data == self.email:
+            return True
 
     @login_manager.user_loader
     def load_user(user_id):
