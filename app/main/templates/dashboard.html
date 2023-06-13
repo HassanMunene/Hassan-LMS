@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}LMS - Dashboard{% endblock %}
+
+{% block page_content %}
+<div class="container">
+	<div class="page-header">
+		{% if current_user.role=="admin" %}
+			<h2>THE LMS ADMIN</h2>
+		{% elif current_user.role=="librarian" %}
+			<h2>THE LMS LIBRARIAN</h2>
+		{% else %}
+			<h2>THE LMS STUDENT</h2>
+		{% endif %}
+	</div>
+	<div class="row justify-content-centre">
+
+	</div>
+</div>
+{% endblock %}
