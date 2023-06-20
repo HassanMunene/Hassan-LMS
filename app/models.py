@@ -43,3 +43,15 @@ class User(db.Model, UserMixin):
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+
+class Book(db.Model):
+    __tablename__ = 'books'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    author = db.Column(db.String(64))
+    isbn = db.Column(db.String(64), unique=True)
+    publisher = db.Column(db.String(64))
+    publication_date = db.Column(db.Date, nullable=True)
+    genre = db.Column(db.String(64))
+    condition = db.Column(db.String(64))
